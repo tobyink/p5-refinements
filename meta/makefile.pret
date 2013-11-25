@@ -3,6 +3,10 @@
 @prefix : <http://ontologi.es/doap-deps#>.
 
 `Refinements`
+	:runtime-requirement    [ :on "perl 5.010"^^:CpanId ];
+	:runtime-requirement    [ :on "Exporter::Tiny"^^:CpanId ];
+	:runtime-requirement    [ :on "Method::Lexical"^^:CpanId ];
+	:runtime-requirement    [ :on "Module::Runtime"^^:CpanId ];
 	:test-requirement       [ :on "Test::More 0.96"^^:CpanId ];
 	:develop-recommendation [ :on "Dist::Inkt 0.001"^^:CpanId ];
 	.
