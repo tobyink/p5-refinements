@@ -51,7 +51,17 @@ use warnings;
 		my ($package, $subname) = ($fqname =~ /^(.+)::(\w+)$/);
 		use_package_optimistically($package);
 		my $orig = $package->can($subname);
-		return sub { unshift @_, $orig; goto $coderef };
+		
+		return sub
+		{
+			my $curr = $_[0]->can($subname);
+			if ($curr == $orig)
+			{
+				unshift @_, $orig;
+				goto $coderef;
+			}
+			goto $curr;
+		};
 	};
 	
 	sub import
