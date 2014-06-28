@@ -50,7 +50,8 @@ use warnings;
 		my ($fqname, $coderef) = @_;
 		my ($package, $subname) = ($fqname =~ /^(.+)::(\w+)$/);
 		use_package_optimistically($package);
-		my $orig = $package->can($subname);
+		my $orig = $package->can($subname)
+			// bless(sub { () }, "Refinements::DummyMethod");
 		
 		return sub
 		{
@@ -111,9 +112,11 @@ C<< "UNIVERSAL::DOES" >>.
 
 C<< $coderef >> is the new implementation for the method. Note that,
 like L<Moose> C<around> method modifiers, it gets passed a coderef for
-the I<original> method as its first argument. Unlike L<Moose>, this may
-sometimes be C<undef> (if your refinement is defining a new method
-which does not already exist).
+the I<original> method as its first argument. Unlike L<Moose>, your
+refinement might be defining a new method which does not already exist,
+in which case that argument will be a dummy coderef which does nothing.
+(It will be blessed into the C<Refinements::DummyMethod> package,
+so it's easy to detect this case if need be.)
 
 =item C<< has_refinement($fqname) >>
 
